@@ -1,0 +1,12 @@
+<customUI xmlns="http://schemas.microsoft.com/office/2006/01/customui">
+	<ribbon>
+		<tabs>
+			<tab id="UGM" label="User Group Manager" insertAfterMso="TabHome">
+				<group id="ToolsGrp" label="Tools">
+					<button id="MasterSheetBtn" label="Create Master Sheet" size="large" onAction="CreateMasterSheetAction" imageMso="FileNew" />
+				</group>
+
+			</tab>
+		</tabs>
+	</ribbon>
+</customUI>
