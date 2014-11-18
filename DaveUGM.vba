@@ -81,11 +81,13 @@ End Function
 Private Function CopyForMeeting() As Boolean
     Dim sName$
     
-    Dim i As Integer
-    i = ActiveWorkbook.Worksheets.Count
+    If Not WksExists("Master Sheet") Then
+        Call CopyForMaster
+    End If
      
     Do While sName$ = ""
         sName$ = Application.InputBox("Enter a name for the new sheet, preferably the site of the meeting" & vbLf & "(Name should include atleast one letter)", "Create Site Worksheet")
+
         If WksExists(sName$) Then
             MsgBox "Duplicate Sheet Name"
             sName$ = ""
@@ -95,17 +97,10 @@ Private Function CopyForMeeting() As Boolean
             CopyForMeeting = False
             Exit Function
         End If
-    
     Loop
     
-    If Not WksExists("Master Sheet") Then
-        MsgBox "Create a Master Sheet First"
-        CopyForMeeting = False
-        Exit Function
-    Else
-        Worksheets("Master Sheet").Copy After:=Worksheets(i)
-        ActiveSheet.Name = sName$
-    End If
+    Worksheets("Master Sheet").Copy After:=Worksheets(ActiveWorkbook.Worksheets.Count)
+    ActiveSheet.Name = sName$
     CopyForMeeting = True
 End Function
 
