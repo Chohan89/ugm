@@ -1,6 +1,6 @@
 Attribute VB_Name = "DaveUGM"
 Public Sub CreateMeeting()
-    If Not Copy() Then
+    If Not CopyForMeeting() Then
         MsgBox "Canceled"
         Exit Sub
     End If
@@ -13,9 +13,14 @@ Public Sub CreateMeeting()
 End Sub
 
 Public Sub CreateMasterSheet()
-    If Not OnlyCopy() Then
+    Set oldSheet = ActiveSheet
+    If Not CopyForMaster() Then
+        MsgBox "Canceled"
         Exit Sub
     End If
+    Application.DisplayAlerts = False
+    oldSheet.Delete
+    Application.DisplayAlerts = True
     Call ResetFilters
     Call Cleanup
     Call Propername
@@ -58,22 +63,22 @@ Private Function CreateColumn(Anchor As String, ColNam As String, Colour As Inte
     ActiveCell.Value = ColNam
 End Function
 
-Private Function OnlyCopy()
+Private Function CopyForMaster() As Boolean
     Dim i As Integer
     
     If WksExists("Master Sheet") Then
         MsgBox "Master Sheet already exists"
-        OnlyCopy = False
+        CopyForMaster = False
         Exit Function
     End If
     
     i = ActiveWorkbook.Worksheets.Count
     Worksheets(1).Copy After:=Worksheets(i)
     ActiveSheet.Name = "Master Sheet"
-    OnlyCopy = True
+    CopyForMaster = True
 End Function
 
-Private Function Copy()
+Private Function CopyForMeeting() As Boolean
     Dim sName$
     
     Dim i As Integer
@@ -87,7 +92,7 @@ Private Function Copy()
         End If
         
         If sName$ = "False" Then
-            Copy = False
+            CopyForMeeting = False
             Exit Function
         End If
     
@@ -95,13 +100,13 @@ Private Function Copy()
     
     If Not WksExists("Master Sheet") Then
         MsgBox "Create a Master Sheet First"
-        Copy = False
+        CopyForMeeting = False
         Exit Function
     Else
-    Worksheets("Master Sheet").Copy After:=Worksheets(i)
-    ActiveSheet.Name = sName$
+        Worksheets("Master Sheet").Copy After:=Worksheets(i)
+        ActiveSheet.Name = sName$
     End If
-    Copy = True
+    CopyForMeeting = True
 End Function
 
 Private Sub Cleanup() 'We dont use FindColumn function because it searches row 1, whereas Issues Opened can be anywhere
