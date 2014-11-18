@@ -42,7 +42,7 @@ Private Sub GetXML()
 End Sub
 
 Private Sub SortCountryPhone()
-    
+
     Set Country = Cells.Find(What:="Country")
     Set Phone = Cells.Find(What:="Phone")
     If Country Is Nothing Then
@@ -57,7 +57,7 @@ Private Sub SortCountryPhone()
     lastheader = Cells(Country.Row, Application.ActiveSheet.Columns.Count).End(xlToLeft).Column
     Range(Cells(Country.Row, firstHeader), Cells(Country.Row, lastheader)).Sort key1:=Country, key2:=Phone, order1:=xlAscending, Header:=xlYes
     'Application.ActiveSheet.Rows.Count
-    
+
 End Sub
 
 Private Sub main()

@@ -4,5 +4,5 @@ Public Sub CreateMasterSheetAction(control As IRibbonControl)
 End Sub
 
 Sub CreateMeetingAction(control As IRibbonControl)
-    CreateMeeting
+    Call CreateMeeting
 End Sub

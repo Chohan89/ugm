@@ -29,7 +29,7 @@ Public Sub Propername()
     toProper.Value = temp_range
     Cells(fname.Column - 1)(fname.Row + 1).Value = "=CONCATENATE([@[First Name]],"" "",[@[Last Name]])"
     Range(Cells(1, fname.Column - 1), Cells(Application.ActiveSheet.Rows.Count, fname.Column - 1)).Columns.AutoFit
-    
+
     'RestoreListObjectFilters wks, varFilterCache
 End Sub
 
