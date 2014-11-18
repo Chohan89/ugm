@@ -1,6 +1,5 @@
 Attribute VB_Name = "MatthewUGM"
 Public Sub Propername()
-    ResetFilters
     Set fname = Cells.Find(What:="First Name")
     Set lname = Cells.Find(What:="Last Name")
     Set thename = Cells.Find(What:="Full Name")
