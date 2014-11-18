@@ -122,7 +122,7 @@ Private Sub Cleanup() 'We dont use FindColumn function because it searches row 1
     
     If IsNumeric(Zcell.Column) Then
         For y = 2 To Zcell.Column
-            Columns(1).Delete             'Delete uneeded Cols'
+            Columns(1).Delete             'Delete uneeded Columns'
         Next y
     End If
 End Sub
@@ -320,34 +320,30 @@ Private Sub PhoneConfig()
     Dim tmpnum As String
     Dim g As String
     area_temp = areanum.Value
+
     For Each a In temprng
-           
-      If Not IsNumeric(a.Cells) Then                                      'Red = non Numeric AND OR < 10 digit length
-          a.Cells.Interior.Color = RGB(255, 0, 0)
-       
-      ElseIf Len(a.Cells) < 10 Then
-          a.Cells.Interior.Color = RGB(255, 0, 0)
-          
-      ElseIf Len(a) = 10 Then
-          a.Cells.Interior.Color = RGB(0, 255, 0)                           'Green = 10 digit length
-          g = Left(a.Cells, 3)
-          area_temp(a.Row, 1) = g
-      
-      ElseIf Len(a) > 10 Then
+        If Not IsNumeric(a.Cells) Then                                      'Red = non Numeric AND OR < 10 digit length
+            a.Cells.Interior.Color = RGB(255, 0, 0)
+        ElseIf Len(a.Cells) < 10 Then
+            a.Cells.Interior.Color = RGB(255, 0, 0)
+        ElseIf Len(a) = 10 Then
+            a.Cells.Interior.Color = RGB(0, 255, 0)                           'Green = 10 digit length
+            g = Left(a.Cells, 3)
+            area_temp(a.Row, 1) = g
+        ElseIf Len(a) > 10 Then
             a.Cells.Interior.Color = RGB(255, 255, 0)                         'Yellow = >10 digit length
             tmpnum = Right(a.Cells, 10)
             g = Left(tmpnum, 3)
             area_temp(a.Row, 1) = g
-      End If
-    
+        End If
     Next a
-    
+
     areanum.Value = area_temp
 End Sub
 
 Private Sub AutoFitColumns()
     Lastcol = ActiveSheet.Cells(1, Columns.Count).End(xlToLeft).Column
-    
+
     For i = 1 To Lastcol
         Columns(i).EntireColumn.AutoFit                                              'Autofit all columns'
     Next i
