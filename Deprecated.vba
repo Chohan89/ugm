@@ -59,3 +59,19 @@ Private Sub SortCountryPhone()
     'Application.ActiveSheet.Rows.Count
     
 End Sub
+
+Private Sub main()
+    Call Copy
+    If sName = "False" Then
+        MsgBox "Canceled"
+        Exit Sub
+    End If
+    Call Cleanup
+    Call Propername
+    Call EmailCleanup
+    Call Countries
+    Call State
+    Call DelnMoveCol
+    Call ColHeaderConfig
+    'Call SortCountryPhone
+End Sub

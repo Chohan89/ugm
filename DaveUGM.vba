@@ -1,6 +1,5 @@
 Attribute VB_Name = "DaveUGM"
 Public sName As String
-Public RC As Integer
 
 Public Sub CreateMeeting()
     Call Copy
@@ -16,9 +15,7 @@ Public Sub CreateMeeting()
 End Sub
 
 Public Sub CreateMasterSheet()
-    RC = 0                               'Reset Return Code
-    Call OnlyCopy
-    If RC = 8 Then
+    If OnlyCopy() = 8 Then
         Exit Sub
     End If
     Call Cleanup
@@ -70,19 +67,20 @@ Private Function MoveCol(Anchor As String, ColNam As String, Colour As Integer)
     ActiveCell.Value = ColNam
 End Function
 
-Private Sub OnlyCopy()
+Private Function OnlyCopy()
     Dim i As Integer
     
     If WksExists("Master Sheet") Then
         MsgBox "Master Sheet already exists"
-        RC = 8
-        Exit Sub
+        OnlyCopy = 8
+        Exit Function
     End If
     
     i = ActiveWorkbook.Worksheets.Count
     Worksheets(1).Copy After:=Worksheets(i)
     ActiveSheet.Name = "Master Sheet"
-End Sub
+    OnlyCopy = 0
+End Function
 
 Private Function Copy()
     sName = ""
