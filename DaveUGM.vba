@@ -5,8 +5,8 @@ Public Sub CreateMeeting()
         Exit Sub
     End If
     Call ResetFilters
-    Call DelnMoveCol
-    Call ColHeaderConfig
+    Call DeleteAndMoveColumns
+    Call ColumnHeaderConfig
     Call PhoneConfig
     Call FilterCountries
     Call FilterState
@@ -29,24 +29,24 @@ Private Function WksExists(wksName As String) As Boolean
     WksExists = CBool(Len(Worksheets(wksName).Name) > 0)
 End Function
 
-Private Function ValCol(ColNam As String) As Range
+Private Function FindColumn(ColNam As String) As Range
     On Error Resume Next
     Lastcol = ActiveSheet.Cells(1, Columns.Count).End(xlToLeft).Column      'find last column
     Dim col As Range
     Set col = Range(Cells(1, 1), Cells(1, Lastcol)).Find(ColNam)          'find target column
     lastrow = Cells(Application.ActiveSheet.Rows.Count, col.Column).End(xlUp).Row
-    Set ValCol = Range(Cells(col.Row, col.Column), Cells(lastrow, col.Column))
-    If ValCol Is Nothing Then
+    Set FindColumn = Range(Cells(col.Row, col.Column), Cells(lastrow, col.Column))
+    If FindColumn Is Nothing Then
         MsgBox (ColNam + " column not found")
     End If
 End Function
 
 Private Function RenameCell(Target As String, Chnge As String)
     On Error Resume Next
-    ValCol(Target)(1)(1).Value = Chnge
+    FindColumn(Target)(1)(1).Value = Chnge
 End Function
 
-Private Function MoveCol(Anchor As String, ColNam As String, Colour As Integer)
+Private Function CreateColumn(Anchor As String, ColNam As String, Colour As Integer)
     On Error Resume Next
     Lastcol = ActiveSheet.Cells(1, Columns.Count).End(xlToLeft).Column      'find last column
     Set Anch = Range(Cells(1, 1), Cells(1, Lastcol)).Find(Anchor)           'find Anchor column
@@ -104,7 +104,7 @@ Private Function Copy()
     Copy = True
 End Function
 
-Private Sub Cleanup() 'We dont use ValCol function because it searches row 1, whereas Issues Opened can be anywhere
+Private Sub Cleanup() 'We dont use FindColumn function because it searches row 1, whereas Issues Opened can be anywhere
     Dim x As Integer
     Dim y As Integer
     
@@ -130,10 +130,7 @@ End Sub
 Private Sub FilterCountries()
     'Filter for US and Canada'
     
-    'Dim Ccell As Range
-    'Set Ccell = ActiveSheet.Cells.Find("Country")
-    
-    Set Ccell = ValCol("CON")
+    Set Ccell = FindColumn("CON")
     If Ccell Is Nothing Then
         Exit Sub
     End If
@@ -154,7 +151,7 @@ Private Sub EmailCleanup()
     Columns(rLastCell.Column).Select                                                                                        'create temp column'
     Selection.Insert shift:=xlToRight, copyorigin:=xlFormatFromRightOrAbove
     
-    Set Ecell = ValCol("Column1")
+    Set Ecell = FindColumn("Column1")
     If Ecell Is Nothing Then
         Exit Sub
     End If
@@ -173,8 +170,7 @@ Private Sub EmailCleanup()
     
     Columns(Ecell.Column).EntireColumn.Delete                                                                            'Delete Temp column'
 
-    'Set Ecell = ActiveSheet.Cells.Find("Email")
-    Set Ecell = ValCol("Email")
+    Set Ecell = FindColumn("Email")
     If Ecell Is Nothing Then
         Exit Sub
     End If
@@ -184,7 +180,7 @@ End Sub
 Private Sub FilterState()
     Dim Scell As Range
 
-    Set Scell = ValCol("State/Region")
+    Set Scell = FindColumn("State/Region")
     If Scell Is Nothing Then
         Exit Sub
     End If
@@ -194,12 +190,11 @@ Private Sub FilterState()
         xlFilterValues
 End Sub
 
-Private Sub DelnMoveCol()
+Private Sub DeleteAndMoveColumns()
     Dim i As Long
     Dim k As Long
     
-    'Set Acell = ActiveSheet.Cells.Find("City")
-    Set Acell = ValCol("City")
+    Set Acell = FindColumn("City")
     If Acell Is Nothing Then
         Exit Sub
     End If
@@ -217,19 +212,19 @@ Private Sub DelnMoveCol()
     Dim Gcell As Range
     Dim Pcell As Range
 
-    Set Gcell = ValCol("Backlog")
+    Set Gcell = FindColumn("Backlog")
     If Gcell Is Nothing Then
         Exit Sub
     End If
     
     Columns(Gcell.Column).EntireColumn.Delete              'Delete Backlog column'
     
-    Set Gcell = ValCol("Site Name")
+    Set Gcell = FindColumn("Site Name")
     If Gcell Is Nothing Then
         Exit Sub
     End If
     
-    Set Pcell = ValCol("Phone")
+    Set Pcell = FindColumn("Phone")
     If Pcell Is Nothing Then
         Exit Sub
     End If
@@ -239,7 +234,7 @@ Private Sub DelnMoveCol()
     Columns(Pcell.Column).Select
     Selection.Insert shift:=xlToRight
         
-    Set Gcell = ValCol("ZIP Code")
+    Set Gcell = FindColumn("ZIP Code")
     If Gcell Is Nothing Then
         Exit Sub
     End If
@@ -248,31 +243,30 @@ Private Sub DelnMoveCol()
     Selection.Cut
     Columns(Gcell.Column).Select
     Selection.Insert shift:=xlToRight, copyorigin:=xlformatfromleftofabove
-    Cells(1, 1).Select
         
     'create new column and name it Attend'
-    Call MoveCol("Email", "Attend", 255)
+    Call CreateColumn("Email", "Attend", 255)
         
     'create new column and name it Office Site'
-    Call MoveCol("Email", ActiveSheet.Name, 255)
+    Call CreateColumn("Email", ActiveSheet.Name, 255)
         
     'create new column and name it Response Details'
-    Call MoveCol("Email", "Response Details", 255)
+    Call CreateColumn("Email", "Response Details", 255)
     
     'create new column and name it P'
-    Call MoveCol("Email", "P", 255)
+    Call CreateColumn("Email", "P", 255)
     
     'create new column and name it Area'
-    Call MoveCol("Site ID", "Area", 255)
+    Call CreateColumn("Site ID", "Area", 255)
         
     'create new column and name it Area Code State'
-    Call MoveCol("Site ID", "Area Code State", 255)
+    Call CreateColumn("Site ID", "Area Code State", 255)
     
     'create new column and name it Local'
-    Call MoveCol("Site ID", "Local", 255)
+    Call CreateColumn("Site ID", "Local", 255)
 End Sub
 
-Private Sub ColHeaderConfig()
+Private Sub ColumnHeaderConfig()
     'Find Issues Opened Col to rename it'
     Call RenameCell("Issues Opened", "OPN")
         
@@ -285,7 +279,7 @@ Private Sub ColHeaderConfig()
     'Find Country Col to rename it'
     Call RenameCell("Country", "CON")
     
-    Call AutoFitCol
+    Call AutoFitColumns
     
     Rows(1).RowHeight = 53
 End Sub
@@ -308,12 +302,12 @@ Private Sub SortCountryPhone() 'NOT BEING USED AS OF YET
 End Sub
 
 Private Sub PhoneConfig()
-    Set Phone = ValCol("Phone")
+    Set Phone = FindColumn("Phone")
     If Phone Is Nothing Then
         Exit Sub
     End If
     
-    Set areanum = ValCol("Area")
+    Set areanum = FindColumn("Area")
     If areanum Is Nothing Then
         Exit Sub
     End If
@@ -351,7 +345,7 @@ Private Sub PhoneConfig()
     areanum.Value = area_temp
 End Sub
 
-Private Sub AutoFitCol()
+Private Sub AutoFitColumns()
     Lastcol = ActiveSheet.Cells(1, Columns.Count).End(xlToLeft).Column
     
     For i = 1 To Lastcol
