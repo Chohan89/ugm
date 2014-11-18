@@ -43,10 +43,7 @@ End Function
 
 Private Function RenameCell(Target As String, Chnge As String)
     On Error Resume Next
-    Lastcol = ActiveSheet.Cells(1, Columns.Count).End(xlToLeft).Column      'find last column
-    Set Trget = Range(Cells(1, 1), Cells(1, Lastcol)).Find(Target)          'find target column
-    Columns(Trget.Column).Select
-    ActiveCell.Value = Chnge
+    ValCol(Target)(1)(1).Value = Chnge
 End Function
 
 Private Function MoveCol(Anchor As String, ColNam As String, Colour As Integer)
@@ -55,10 +52,8 @@ Private Function MoveCol(Anchor As String, ColNam As String, Colour As Integer)
     Set Anch = Range(Cells(1, 1), Cells(1, Lastcol)).Find(Anchor)           'find Anchor column
     Columns(Anch.Column).Select
     Selection.Insert shift:=xlToRight, copyorigin:=xlformatfromleftofabove
-    Set GetCell = Range(Cells(1, 1), Cells(1, Lastcol)).Find("Column1")
-    Range(GetCell.Address).Select
     If Not Colour <> "" Then
-    ActiveCell.Interior.Color = Colour
+        ActiveCell.Interior.Color = Colour
     End If
     ActiveCell.Value = ColNam
 End Function
@@ -365,7 +360,7 @@ Private Sub AutoFitCol()
     Lastcol = ActiveSheet.Cells(1, Columns.Count).End(xlToLeft).Column
     
     For i = 1 To Lastcol
-            Columns(i).EntireColumn.AutoFit                                              'Autofit all columns'
+        Columns(i).EntireColumn.AutoFit                                              'Autofit all columns'
     Next i
 End Sub
 
