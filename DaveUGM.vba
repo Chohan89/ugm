@@ -9,10 +9,11 @@ Call Copy
         MsgBox "Canceled"
         Exit Sub
         End If
-Call State
 Call DelnMoveCol
 Call ColHeaderConfig
 Call PhoneConfig
+Call Countries
+Call State
 End Sub
 
 Sub MasterSheet()
@@ -24,7 +25,6 @@ Call OnlyCopy
 Call Cleanup
 Call Propername
 Call EmailCleanup
-Call Countries
 
 'Note: Master Sheet will be Sorted by who has most OPEN ISSUES (Opened Issues - Closed Issues)'
 
@@ -149,7 +149,7 @@ Sub Countries()
 'Dim Ccell As Range
 'Set Ccell = ActiveSheet.Cells.Find("Country")
 
-If Not ValCol("Country") Then
+If Not ValCol("CON") Then
     Exit Sub
 Else: Set Ccell = cName
 End If
@@ -222,7 +222,11 @@ Sub DelnMoveCol()
 Dim i As Long
 Dim k As Long
 
-Set Acell = ActiveSheet.Cells.Find("City")
+'Set Acell = ActiveSheet.Cells.Find("City")
+If Not ValCol("City") Then
+    Exit Sub
+Else: Set Acell = cName
+End If
 
 For i = 1 To Acell.Column
     
@@ -239,25 +243,41 @@ Dim Gcell As Range
 Dim Pcell As Range
  
  
-Set Gcell = ActiveSheet.Cells.Find("Backlog")
+'Set Gcell = ActiveSheet.Cells.Find("Backlog")
+If Not ValCol("Backlog") Then
+    Exit Sub
+Else: Set Gcell = cName
+End If
 
     Columns(Gcell.Column).EntireColumn.Delete              'Delete Backlog column'
 
-Set Gcell = ActiveSheet.Cells.Find("Site Name")
-Set Pcell = ActiveSheet.Cells.Find("Phone")
+'Set Gcell = ActiveSheet.Cells.Find("Site Name")
+If Not ValCol("Site Name") Then
+    Exit Sub
+Else: Set Gcell = cName
+End If
+'Set Pcell = ActiveSheet.Cells.Find("Phone")
+If Not ValCol("Phone") Then
+    Exit Sub
+Else: Set Pcell = cName
+End If
 
 Columns(Gcell.Column).Select                               'Move Site Name to the left of Phone'
     Selection.Cut
     Columns(Pcell.Column).Select
     Selection.Insert shift:=xlToRight
     
-Set Gcell = ActiveSheet.Cells.Find("Phone")                'Move Phone to the right spot'
-Set Pcell = ActiveSheet.Cells.Find("ZIP code")
+'Set Pcell = ActiveSheet.Cells.Find("Phone")                'Move Phone to the right spot'
+'Set Gcell = ActiveSheet.Cells.Find("ZIP code")
+If Not ValCol("Zip Code") Then
+    Exit Sub
+Else: Set Gcell = cName
+End If
 
-Columns(Gcell.Column).Select
+Columns(Pcell.Column).Select
     Selection.Cut
-    Columns(Pcell.Column).Select
-    Selection.Insert shift:=xlToRight
+    Columns(Gcell.Column).Select
+    Selection.Insert shift:=xlToRight, copyorigin:=xlformatfromleftofabove
     
 'create new column and name it Attend'
 Call MoveCol("Email", "Attend", 255)
@@ -293,7 +313,7 @@ Call RenameCell("Issues Closed", "CLOSE")
 Call RenameCell("Release", "REL")
 
 'Find Country Col to rename it'
-Call RenameCell("Country", "CO")
+Call RenameCell("Country", "CON")
 
 Call AutoFitCol
 
@@ -352,21 +372,18 @@ For Each a In temprng
   ElseIf Len(a) = 10 Then
       a.Cells.Interior.Color = RGB(0, 255, 0)                           'Green = 10 digit length
       g = Left(a.Cells, 3)
-      'Cells(a.Row, areanum.Column).Value = g
       area_temp(a.Row, 1) = g
   
   ElseIf Len(a) > 10 Then
         a.Cells.Interior.Color = RGB(255, 255, 0)                         'Yellow = >10 digit length
         tmpnum = Right(a.Cells, 10)
         g = Left(tmpnum, 3)
-       ' Cells(a.Row, areanum.Column).Value = g
         area_temp(a.Row, 1) = g
   End If
 
 Next a
 
 areanum.Value = area_temp
-
 End Sub
 Sub AutoFitCol()
 
