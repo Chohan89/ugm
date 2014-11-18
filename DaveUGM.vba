@@ -67,9 +67,7 @@ Private Function CopyForMaster() As Boolean
     Dim i As Integer
     
     If WksExists("Master Sheet") Then
-        MsgBox "Master Sheet already exists"
-        CopyForMaster = False
-        Exit Function
+        Call CreateMasterSheet
     End If
     
     i = ActiveWorkbook.Worksheets.Count
@@ -82,7 +80,7 @@ Private Function CopyForMeeting() As Boolean
     Dim sName$
     
     If Not WksExists("Master Sheet") Then
-        Call CopyForMaster
+        Call CreateMasterSheet
     End If
      
     Do While sName$ = ""
