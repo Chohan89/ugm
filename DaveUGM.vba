@@ -1,6 +1,5 @@
 Attribute VB_Name = "DaveUGM"
 Public sName As String
-Public cName As Range
 Public RC As Integer
 
 Public Sub CreateMeeting()
@@ -34,18 +33,15 @@ Private Function WksExists(wksName As String) As Boolean
     WksExists = CBool(Len(Worksheets(wksName).Name) > 0)
 End Function
 
-Private Function ValCol(ColNam As String) As Boolean
+Private Function ValCol(ColNam As String) As Range
     On Error Resume Next
     Lastcol = ActiveSheet.Cells(1, Columns.Count).End(xlToLeft).Column      'find last column
-    Set cName = Range(Cells(1, 1), Cells(1, Lastcol)).Find(ColNam)          'find target column
-    lastrow = Cells(Application.ActiveSheet.Rows.Count, cName.Column).End(xlUp).Row
-    Set cName = Range(Cells(cName.Row, cName.Column), Cells(lastrow, cName.Column))
-    'MsgBox (x.Address)
-    If cName Is Nothing Then
-        ValCol = False
+    Dim col As Range
+    Set col = Range(Cells(1, 1), Cells(1, Lastcol)).Find(ColNam)          'find target column
+    lastrow = Cells(Application.ActiveSheet.Rows.Count, col.Column).End(xlUp).Row
+    Set ValCol = Range(Cells(col.Row, col.Column), Cells(lastrow, col.Column))
+    If ValCol Is Nothing Then
         MsgBox (ColNam + " column not found")
-    Else
-        ValCol = True
     End If
 End Function
 
@@ -146,9 +142,9 @@ Private Sub FilterCountries()
     'Dim Ccell As Range
     'Set Ccell = ActiveSheet.Cells.Find("Country")
     
-    If Not ValCol("CON") Then
+    Set Ccell = ValCol("CON")
+    If Ccell Is Nothing Then
         Exit Sub
-    Else: Set Ccell = cName
     End If
 
     ActiveSheet.Range(Ccell.Address).AutoFilter Field _
@@ -167,9 +163,9 @@ Private Sub EmailCleanup()
     Columns(rLastCell.Column).Select                                                                                        'create temp column'
     Selection.Insert shift:=xlToRight, copyorigin:=xlFormatFromRightOrAbove
     
-    If Not ValCol("Column1") Then
+    Set Ecell = ValCol("Column1")
+    If Ecell Is Nothing Then
         Exit Sub
-    Else: Set Ecell = cName
     End If
     
     If Ecell.Column <> 16 Then
@@ -188,10 +184,9 @@ Private Sub EmailCleanup()
         
         
     'Set Ecell = ActiveSheet.Cells.Find("Email")
-    If Not ValCol("Email") Then
+    Set Ecell = ValCol("Email")
+    If Ecell Is Nothing Then
         Exit Sub
-    Else:
-        Set Ecell = cName
     End If
     ActiveSheet.Range(Ecell.Address).RemoveDuplicates Columns:=Ecell.Column, Header:=xlYes
 End Sub
@@ -199,10 +194,9 @@ End Sub
 Private Sub FilterState()
     Dim Scell As Range
 
-    If Not ValCol("State/Region") Then
+    Set Scell = ValCol("State/Region")
+    If Scell Is Nothing Then
         Exit Sub
-    Else:
-        Set Scell = cName
     End If
     
     ActiveSheet.Range(Scell.Address).AutoFilter Field _
@@ -215,9 +209,9 @@ Private Sub DelnMoveCol()
     Dim k As Long
     
     'Set Acell = ActiveSheet.Cells.Find("City")
-    If Not ValCol("City") Then
+    Set Acell = ValCol("City")
+    If Acell Is Nothing Then
         Exit Sub
-    Else: Set Acell = cName
     End If
     
     For i = 1 To Acell.Column
@@ -234,24 +228,22 @@ Private Sub DelnMoveCol()
     Dim Pcell As Range
 
     'Set Gcell = ActiveSheet.Cells.Find("Backlog")
-    If Not ValCol("Backlog") Then
+    Set Gcell = ValCol("Backlog")
+    If Gcell Is Nothing Then
         Exit Sub
-    Else:
-        Set Gcell = cName
     End If
     
     Columns(Gcell.Column).EntireColumn.Delete              'Delete Backlog column'
     
     'Set Gcell = ActiveSheet.Cells.Find("Site Name")
-    If Not ValCol("Site Name") Then
+    Set Gcell = ValCol("Site Name")
+    If Gcell Is Nothing Then
         Exit Sub
-    Else: Set Gcell = cName
     End If
     'Set Pcell = ActiveSheet.Cells.Find("Phone")
-    If Not ValCol("Phone") Then
+    Set Pcell = ValCol("Phone")
+    If Pcell Is Nothing Then
         Exit Sub
-    Else:
-        Set Pcell = cName
     End If
     
     Columns(Gcell.Column).Select                               'Move Site Name to the left of Phone'
@@ -261,10 +253,9 @@ Private Sub DelnMoveCol()
         
     'Set Pcell = ActiveSheet.Cells.Find("Phone")                'Move Phone to the right spot'
     'Set Gcell = ActiveSheet.Cells.Find("ZIP code")
-    If Not ValCol("Zip Code") Then
+    Gcell = ValCol("Zip Code")
+    If Gcell Is Nothing Then
         Exit Sub
-    Else:
-        Set Gcell = cName
     End If
     
     Columns(Pcell.Column).Select
@@ -330,16 +321,14 @@ Private Sub SortCountryPhone() 'NOT BEING USED AS OF YET
 End Sub
 
 Private Sub PhoneConfig()
-    Call ResetFilters
-    
-    If Not ValCol("Phone") Then
+    Set Phone = ValCol("Phone")
+    If Phone Is Nothing Then
         Exit Sub
-    Else: Set Phone = cName
     End If
     
-    If Not ValCol("Area") Then
+    Set areanum = ValCol("Area")
+    If areanum Is Nothing Then
         Exit Sub
-    Else: Set areanum = cName
     End If
     
     lastphone = Cells(Application.ActiveSheet.Rows.Count, Phone.Column).End(xlUp).Row
