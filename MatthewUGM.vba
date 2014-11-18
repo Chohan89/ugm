@@ -37,6 +37,5 @@ End Sub
 Public Sub ResetFilters()
     If ActiveSheet.FilterMode = True Then
         ActiveSheet.ShowAllData
-        MsgBox ("Filters have been reset.")
     End If
 End Sub
