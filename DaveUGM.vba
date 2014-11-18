@@ -1,9 +1,6 @@
 Attribute VB_Name = "DaveUGM"
-Public sName As String
-
 Public Sub CreateMeeting()
-    Call Copy
-    If sName = "False" Then
+    If Not Copy() Then
         MsgBox "Canceled"
         Exit Sub
     End If
@@ -15,7 +12,7 @@ Public Sub CreateMeeting()
 End Sub
 
 Public Sub CreateMasterSheet()
-    If OnlyCopy() = 8 Then
+    If Not OnlyCopy() Then
         Exit Sub
     End If
     Call Cleanup
@@ -61,9 +58,9 @@ Private Function MoveCol(Anchor As String, ColNam As String, Colour As Integer)
     If Not Colour <> "" Then
     ActiveCell.Interior.Color = Colour
     End If
-    If ColNam = "sName" Then
-        ActiveCell.Value = sName
-    End If
+    'If ColNam = "sName" Then
+    '    ActiveCell.Value = sName
+    'End If
     ActiveCell.Value = ColNam
 End Function
 
@@ -72,43 +69,45 @@ Private Function OnlyCopy()
     
     If WksExists("Master Sheet") Then
         MsgBox "Master Sheet already exists"
-        OnlyCopy = 8
+        OnlyCopy = False
         Exit Function
     End If
     
     i = ActiveWorkbook.Worksheets.Count
     Worksheets(1).Copy After:=Worksheets(i)
     ActiveSheet.Name = "Master Sheet"
-    OnlyCopy = 0
+    OnlyCopy = True
 End Function
 
 Private Function Copy()
-    sName = ""
+    Dim sName$
     
     Dim i As Integer
     i = ActiveWorkbook.Worksheets.Count
      
-    Do While sName = ""
-    sName = Application.InputBox("Enter a name for the new sheet, preferably the site of the meeting" & vbLf & "(Name should include atleast one letter)", "Create Site Worksheet")
-    If WksExists(sName) Then
-        MsgBox "Duplicate Sheet Name"
-        sName = ""
-    End If
-    
-    If sName = "False" Then
-        Exit Function
-    End If
+    Do While sName$ = ""
+        sName$ = Application.InputBox("Enter a name for the new sheet, preferably the site of the meeting" & vbLf & "(Name should include atleast one letter)", "Create Site Worksheet")
+        If WksExists(sName$) Then
+            MsgBox "Duplicate Sheet Name"
+            sName$ = ""
+        End If
+        
+        If sName$ = "False" Then
+            Copy = False
+            Exit Function
+        End If
     
     Loop
     
     If Not WksExists("Master Sheet") Then
         MsgBox "Create a Master Sheet First"
-        sName = "False"
+        Copy = False
         Exit Function
     Else
     Worksheets("Master Sheet").Copy After:=Worksheets(i)
-    ActiveSheet.Name = sName
+    ActiveSheet.Name = sName$
     End If
+    Copy = True
 End Function
 
 Private Sub Cleanup() 'We dont use ValCol function because it searches row 1, whereas Issues Opened can be anywhere
@@ -265,7 +264,7 @@ Private Sub DelnMoveCol()
     Call MoveCol("Email", "Attend", 255)
         
     'create new column and name it Office Site'
-    Call MoveCol("Email", sName, 255)
+    Call MoveCol("Email", ActiveSheet.Name, 255)
         
     'create new column and name it Response Details'
     Call MoveCol("Email", "Response Details", 255)
