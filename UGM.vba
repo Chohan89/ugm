@@ -18,3 +18,6 @@ End Sub
 Public Sub CreateMasterSheetAction(control As IRibbonControl)
     Call MasterSheet
 End Sub
+
+Sub CreateMeetingAction(control As IRibbonControl)
+End Sub
