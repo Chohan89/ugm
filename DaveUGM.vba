@@ -60,9 +60,6 @@ Private Function MoveCol(Anchor As String, ColNam As String, Colour As Integer)
     If Not Colour <> "" Then
     ActiveCell.Interior.Color = Colour
     End If
-    'If ColNam = "sName" Then
-    '    ActiveCell.Value = sName
-    'End If
     ActiveCell.Value = ColNam
 End Function
 
