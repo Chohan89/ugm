@@ -3,7 +3,8 @@
 		<tabs>
 			<tab id="UGM" label="User Group Manager" insertAfterMso="TabHome">
 				<group id="ToolsGrp" label="Tools">
-					<button id="MasterSheetBtn" label="Create Master Sheet" size="large" onAction="CreateMasterSheetAction" imageMso="FileNew" />
+					<button id="CreateMasterSheetBtn" label="Create Master Sheet" size="large" onAction="CreateMasterSheetAction" imageMso="FileNew" />
+					<button id="CreateMeetingBtn" label="Create Meeting" size="large" onAction="CreateMeetingAction" imageMso="FileNew" />
 				</group>
 
 			</tab>
