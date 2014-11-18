@@ -113,17 +113,17 @@ Private Sub Cleanup() 'We dont use ValCol function because it searches row 1, wh
     Set Zcell = ActiveSheet.Cells.Find("Issues Opened ")
     
     If IsNumeric(Zcell.Row) Then
-    For x = 1 To Zcell.Row + 1
-        Rows(1).Delete            'Delete uneeded Rows'
-    Next x
+        For x = 1 To Zcell.Row + 1
+            Rows(1).Delete            'Delete uneeded Rows'
+        Next x
     End If
     
     Set Zcell = ActiveSheet.Cells.Find("Issues Opened")
     
     If IsNumeric(Zcell.Column) Then
-    For y = 2 To Zcell.Column
-    Columns(1).Delete             'Delete uneeded Cols'
-    Next y
+        For y = 2 To Zcell.Column
+            Columns(1).Delete             'Delete uneeded Cols'
+        Next y
     End If
 End Sub
 
@@ -139,7 +139,7 @@ Private Sub FilterCountries()
     End If
 
     ActiveSheet.Range(Ccell.Address).AutoFilter Field _
-    :=Ccell.Column, Criteria1:="=CA", Operator:=xlOr, Criteria2:="=US"
+        :=Ccell.Column, Criteria1:="=CA", Operator:=xlOr, Criteria2:="=US"
 End Sub
 
 Private Sub EmailCleanup()
@@ -172,8 +172,7 @@ Private Sub EmailCleanup()
     Range(Cells(Ecell.Row, Header), Cells(Ecell.Row, lastheader)).Sort key1:=Ecell, order1:=xlDescending
     
     Columns(Ecell.Column).EntireColumn.Delete                                                                            'Delete Temp column'
-        
-        
+
     'Set Ecell = ActiveSheet.Cells.Find("Email")
     Set Ecell = ValCol("Email")
     If Ecell Is Nothing Then
@@ -218,7 +217,6 @@ Private Sub DelnMoveCol()
     Dim Gcell As Range
     Dim Pcell As Range
 
-    'Set Gcell = ActiveSheet.Cells.Find("Backlog")
     Set Gcell = ValCol("Backlog")
     If Gcell Is Nothing Then
         Exit Sub
@@ -226,34 +224,31 @@ Private Sub DelnMoveCol()
     
     Columns(Gcell.Column).EntireColumn.Delete              'Delete Backlog column'
     
-    'Set Gcell = ActiveSheet.Cells.Find("Site Name")
     Set Gcell = ValCol("Site Name")
     If Gcell Is Nothing Then
         Exit Sub
     End If
     
-    'Set Pcell = ActiveSheet.Cells.Find("Phone")
     Set Pcell = ValCol("Phone")
     If Pcell Is Nothing Then
         Exit Sub
     End If
     
     Columns(Gcell.Column).Select                               'Move Site Name to the left of Phone'
-        Selection.Cut
-        Columns(Pcell.Column).Select
-        Selection.Insert shift:=xlToRight
+    Selection.Cut
+    Columns(Pcell.Column).Select
+    Selection.Insert shift:=xlToRight
         
-    'Set Pcell = ActiveSheet.Cells.Find("Phone")                'Move Phone to the right spot'
-    'Set Gcell = ActiveSheet.Cells.Find("ZIP code")
-    Gcell = ValCol("Zip Code")
+    Set Gcell = ValCol("ZIP Code")
     If Gcell Is Nothing Then
         Exit Sub
     End If
     
     Columns(Pcell.Column).Select
-        Selection.Cut
-        Columns(Gcell.Column).Select
-        Selection.Insert shift:=xlToRight, copyorigin:=xlformatfromleftofabove
+    Selection.Cut
+    Columns(Gcell.Column).Select
+    Selection.Insert shift:=xlToRight, copyorigin:=xlformatfromleftofabove
+    Cells(1, 1).Select
         
     'create new column and name it Attend'
     Call MoveCol("Email", "Attend", 255)
