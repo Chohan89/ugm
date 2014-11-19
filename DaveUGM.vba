@@ -310,6 +310,16 @@ Private Sub PhoneConfig()
         Exit Sub
     End If
     
+    Set areaCodeState = FindColumn("Area Code State")
+    If areaCodeState Is Nothing Then
+        Exit Sub
+    End If
+    
+    Set countries = FindColumn("CON")
+    If countries Is Nothing Then
+        Exit Sub
+    End If
+    
     lastphone = Cells(Application.ActiveSheet.Rows.Count, Phone.Column).End(xlUp).Row
     Set firstcell = Cells(Phone.Row, Phone.Column)
     Set lastcell = Cells(lastphone, Phone.Column)
@@ -318,25 +328,36 @@ Private Sub PhoneConfig()
     Dim tmpnum As String
     Dim g As String
     area_temp = areanum.Value
+    area_code_state_temp = areaCodeState.Value
+    
+    Dim gacdb As New Collection
+    Set gacdb = GetAreaCodeDB()
 
     For Each a In temprng
-        If Not IsNumeric(a.Cells) Then                                      'Red = non Numeric AND OR < 10 digit length
-            a.Cells.Interior.Color = RGB(255, 0, 0)
-        ElseIf Len(a.Cells) < 10 Then
+        If Not IsNumeric(a.Cells) Or Len(a.Cells) < 10 Then                   'Red = non Numeric AND OR < 10 digit length
             a.Cells.Interior.Color = RGB(255, 0, 0)
         ElseIf Len(a) = 10 Then
             a.Cells.Interior.Color = RGB(0, 255, 0)                           'Green = 10 digit length
             g = Left(a.Cells, 3)
             area_temp(a.Row, 1) = g
+            key = countries(a.Row, 1).Value & g
+            If (Contains(gacdb, key)) Then
+                area_code_state_temp(a.Row, 1) = gacdb.Item(key)
+            End If
         ElseIf Len(a) > 10 Then
             a.Cells.Interior.Color = RGB(255, 255, 0)                         'Yellow = >10 digit length
             tmpnum = Right(a.Cells, 10)
             g = Left(tmpnum, 3)
             area_temp(a.Row, 1) = g
+            key = countries(a.Row, 1).Value & g
+            If (Contains(gacdb, key)) Then
+                area_code_state_temp(a.Row, 1) = gacdb.Item(key)
+            End If
         End If
     Next a
 
     areanum.Value = area_temp
+    areaCodeState.Value = area_code_state_temp
 End Sub
 
 Private Sub AutoFitColumns()
