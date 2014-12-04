@@ -133,8 +133,14 @@ Private Sub FilterCountries()
         Exit Sub
     End If
 
-    ActiveSheet.Range(Ccell.Address).AutoFilter Field _
-        :=Ccell.Column, Criteria1:="=CA", Operator:=xlOr, Criteria2:="=US"
+    'ActiveSheet.Range(Ccell.Address).AutoFilter Field _
+    '    :=Ccell.Column, Criteria1:="=CA", Operator:=xlOr, Criteria2:="=US"
+    myCriteria = ShowForm("CON")
+    If myCriteria(0) <> "" Then
+        ActiveSheet.Range(Ccell.Address).AutoFilter Field _
+            :=Ccell.Column, Criteria1:=myCriteria, Operator:= _
+            xlFilterValues
+    End If
 End Sub
 
 Private Sub EmailCleanup()
@@ -183,9 +189,12 @@ Private Sub FilterState()
         Exit Sub
     End If
     
-    ActiveSheet.Range(Scell.Address).AutoFilter Field _
-        :=Scell.Column, Criteria1:=Array("DC", "DE", "MD", "NJ", "NY", "PA"), Operator:= _
-        xlFilterValues
+    myCriteria = ShowForm("State/Region")
+    If myCriteria(0) <> "" Then
+        ActiveSheet.Range(Scell.Address).AutoFilter Field _
+            :=Scell.Column, Criteria1:=myCriteria, Operator:= _
+            xlFilterValues
+    End If
 End Sub
 
 Private Sub DeleteAndMoveColumns()
@@ -200,8 +209,8 @@ Private Sub DeleteAndMoveColumns()
     For i = 1 To Acell.Column
         
         If Cells(1, i).Value <> "" And Not IsEmpty(Cells(i, 1).Value) Then        'If cells are not empty then color in Blue'
-        Cells(1, i).Interior.Color = RGB(0, 112, 192)                             'this is before we make new columns in red'
-        Range(Acell.Address).Borders(xlEdgeLeft).LineStyle = xlContinuous
+            Cells(1, i).Interior.Color = RGB(0, 112, 192)                             'this is before we make new columns in red'
+            Range(Acell.Address).Borders(xlEdgeLeft).LineStyle = xlContinuous
         End If
     Next i
 

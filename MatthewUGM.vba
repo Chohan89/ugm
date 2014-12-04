@@ -37,13 +37,15 @@ Public Sub ResetFilters()
     End If
 End Sub
 
-Public Sub ShowForm()
+Public Function ShowForm(columnHeader As String) As Variant
     Set myFrm = New FilterForm
-    myArr = UniqueItems(FindColumn("Area Code State"), False)
-    myArr(0) = "" 'Removes header column
+    myArr = UniqueItems(FindColumn(columnHeader), False)
+    myArr(1) = "" 'Removes header column
     myFrm.SetData (myArr)
     myFrm.Show
-End Sub
+    ShowForm = myFrm.GetData
+    Unload myFrm
+End Function
 
 Function UniqueItems(ArrayIn, Optional Count As Variant) As Variant
 '   Accepts an array or range as input

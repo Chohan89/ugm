@@ -82,7 +82,7 @@ Private Sub BTN_MoveSelectedRight_Click()
 End Sub
 
 Private Sub BTN_ok_Click()
-    Unload Me
+    Me.Hide
 End Sub
 
 Private Sub SortData(myListBox)
@@ -115,3 +115,20 @@ Public Sub SetData(data)
     SortData ListBox1
 
 End Sub
+
+Public Function GetData() As Variant
+
+    Dim myArr() As String
+    If Me.ListBox2.ListCount > 0 Then
+        ReDim myArr(0 To Me.ListBox2.ListCount - 1) As String
+        Dim iCtr As Long
+    
+        For iCtr = 0 To Me.ListBox2.ListCount - 1
+            myArr(iCtr) = Me.ListBox2.List(iCtr)
+        Next iCtr
+    Else
+        ReDim myArr(0 To 0) As String
+    End If
+    GetData = myArr
+
+End Function
