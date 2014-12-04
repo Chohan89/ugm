@@ -34,7 +34,7 @@ Private Function WksExists(wksName As String) As Boolean
     WksExists = CBool(Len(Worksheets(wksName).Name) > 0)
 End Function
 
-Private Function FindColumn(ColNam As String) As Range
+Public Function FindColumn(ColNam As String) As Range
     On Error Resume Next
     Lastcol = ActiveSheet.Cells(1, Columns.Count).End(xlToLeft).Column      'find last column
     Dim col As Range
