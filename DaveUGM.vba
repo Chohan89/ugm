@@ -135,7 +135,7 @@ Private Sub FilterCountries()
 
     'ActiveSheet.Range(Ccell.Address).AutoFilter Field _
     '    :=Ccell.Column, Criteria1:="=CA", Operator:=xlOr, Criteria2:="=US"
-    myCriteria = ShowForm("CON")
+    myCriteria = ShowForm("Country", "CON")
     If myCriteria(0) <> "" Then
         ActiveSheet.Range(Ccell.Address).AutoFilter Field _
             :=Ccell.Column, Criteria1:=myCriteria, Operator:= _
@@ -184,12 +184,12 @@ End Sub
 Private Sub FilterState()
     Dim Scell As Range
 
-    Set Scell = FindColumn("State/Region")
+    Set Scell = FindColumn("Area Code State")
     If Scell Is Nothing Then
         Exit Sub
     End If
     
-    myCriteria = ShowForm("State/Region")
+    myCriteria = ShowForm("State", "Area Code State")
     If myCriteria(0) <> "" Then
         ActiveSheet.Range(Scell.Address).AutoFilter Field _
             :=Scell.Column, Criteria1:=myCriteria, Operator:= _

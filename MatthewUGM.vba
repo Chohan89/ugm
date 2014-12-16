@@ -37,8 +37,9 @@ Public Sub ResetFilters()
     End If
 End Sub
 
-Public Function ShowForm(columnHeader As String) As Variant
+Public Function ShowForm(caption As String, columnHeader As String) As Variant
     Set myFrm = New FilterForm
+    myFrm.caption = caption & " Filter"
     myArr = UniqueItems(FindColumn(columnHeader), False)
     myArr(1) = "" 'Removes header column
     myFrm.SetData (myArr)
