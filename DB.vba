@@ -9,14 +9,16 @@ Function GetAreaCodeDB() As Collection
     Set col = New Collection
 
     Set database = OpenDatabase(Application.UserLibraryPath & "\UserGroupManager.mdb")
-    Set rst = database.OpenRecordset("State")
+    Set rst = database.OpenRecordset("Geodata")
 
     Do Until rst.EOF
         Dim key As String
-        Dim val As String
+        Dim geo As Geodata
+        Set geo = New Geodata
         key = rst.Fields("Country") & rst.Fields("AreaCode")
-        val = rst.Fields("Name")
-        col.Add val, key
+        geo.State = rst.Fields("State")
+        geo.Region = rst.Fields("Region")
+        col.Add geo, key
         rst.MoveNext
     Loop
 
@@ -35,7 +37,7 @@ Public Function Contains(col As Collection, key As Variant) As Boolean
     Dim obj As Variant
     On Error GoTo err
         Contains = True
-        obj = col(key)
+        obj = col(key).State
         Exit Function
 err:
         Contains = False

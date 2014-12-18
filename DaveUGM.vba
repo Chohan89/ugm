@@ -324,6 +324,11 @@ Private Sub PhoneConfig()
         Exit Sub
     End If
     
+    Set local_regions = FindColumn("Local")
+    If local_regions Is Nothing Then
+        Exit Sub
+    End If
+    
     Set countries = FindColumn("CON")
     If countries Is Nothing Then
         Exit Sub
@@ -338,6 +343,7 @@ Private Sub PhoneConfig()
     Dim g As String
     area_temp = areanum.Value
     area_code_state_temp = areaCodeState.Value
+    regions_temp = local_regions.Value
     
     Dim gacdb As New Collection
     Set gacdb = GetAreaCodeDB()
@@ -351,7 +357,8 @@ Private Sub PhoneConfig()
             area_temp(a.Row, 1) = g
             key = countries(a.Row, 1).Value & g
             If (Contains(gacdb, key)) Then
-                area_code_state_temp(a.Row, 1) = gacdb.Item(key)
+                area_code_state_temp(a.Row, 1) = gacdb.Item(key).State
+                regions_temp(a.Row, 1) = gacdb.Item(key).Region
             End If
         ElseIf Len(a) > 10 Then
             a.Cells.Interior.Color = RGB(255, 255, 0)                         'Yellow = >10 digit length
@@ -360,13 +367,15 @@ Private Sub PhoneConfig()
             area_temp(a.Row, 1) = g
             key = countries(a.Row, 1).Value & g
             If (Contains(gacdb, key)) Then
-                area_code_state_temp(a.Row, 1) = gacdb.Item(key)
+                area_code_state_temp(a.Row, 1) = gacdb.Item(key).State
+                regions_temp(a.Row, 1) = gacdb.Item(key).Region
             End If
         End If
     Next a
 
     areanum.Value = area_temp
     areaCodeState.Value = area_code_state_temp
+    local_regions.Value = regions_temp
 End Sub
 
 Private Sub AutoFitColumns()
